@@ -1,0 +1,27 @@
+name: Upload Notebook to S3
+
+on:
+  push:
+    paths:
+      - '**.ipynb'
+
+jobs:
+  upload-to-s3:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Upload to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "ap-south-1"  # change as needed
+        run: |
+          aws s3 cp notebook64fea3d758.ipynb s3://my-covid-notebooks/notebooks/
